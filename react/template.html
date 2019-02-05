@@ -17,29 +17,88 @@
     <div id="app"></div>
 
     <script type="text/babel">
+
       var Counter = React.createClass({
         getInitialState() {
           return {
-            count: 0,
-            title: 'React Counter'
+            fiBtitle: 'React Fibonacci Counter',
+            currentNum: 1,
+            backwardNum: 0,
+            cantGoNegativeError: false,
+            allowForDecrement: false
           };
         },
-        increment() {
-          this.setState({count: this.state.count + 1});
+
+        fibDecrement() {
+          if (this.state.currentNum === 1){
+            this.setState({cantGoNegativeError: true})
+          }else {
+            var forwardNumber = this.state.currentNum + this.state.backwardNum
+            var currentNumber = forwardNumber - this.state.currentNum
+            var newForward = this.state.currentNum
+            var newBackward = newForward - currentNumber
+
+            this.setState({
+              currentNum: currentNumber,
+              backwardNum: newBackward
+            })
+          }
+
         },
-        decrement() {
-          if (this.state.count > 0) this.setState({count: this.state.count - 1});
+
+        fibIncrement() {
+          var num = this.state.currentNum
+          var newNum = num + this.state.backwardNum
+
+           this.setState({
+             currentNum: newNum,
+             backwardNum: this.state.currentNum,
+             cantGoNegativeError: false
+           })
+
+
         },
+
+        handleCheckbox(event) {
+          const target = event.target;
+          const value = target.type === 'checkbox' ? target.checked : target.value
+          const name = target.name;
+
+          this.setState({
+            allowForDecrement: value
+          })
+
+        },
+
+
+
         render() {
           return (
-            <div>
-              <h1 className="app-title">{ this.state.title }</h1>
-              <div className="app-current-count">
-                { this.state.count }
-              </div>
-              <div className="app-counter-buttons">
-                <button type="button" name="decrement" onClick={this.decrement}>-</button>
-                <button type="button" name="increment" onClick={this.increment}>+</button>
+            <div className="app-container">
+              <div className="single-app-container">
+                <h1 className="app-title">{ this.state.fiBtitle }</h1>
+                <div className="app-current-count">
+                  { this.state.currentNum }
+                </div>
+                <div className="app-counter-buttons">
+                  {this.state.allowForDecrement
+                  ?<button type="button" name="decrement" onClick={this.fibDecrement}>-</button>
+                  : null}
+                  <button type="button" name="increment" onClick={this.fibIncrement}>+</button>
+                </div>
+                <div>
+                  Allow for decrement:
+                    <input
+                    name="allowForDecrement"
+                    type="checkbox"
+                    checked={this.state.allowForDecrement}
+                    onChange={this.handleCheckbox}
+                    />
+                </div>
+
+                {this.state.cantGoNegativeError
+                ? <h3 style={{color: 'red'}}>Cannot decrament further</h3>
+                : null}
               </div>
             </div>
           );
@@ -51,4 +110,7 @@
       </script>
 
   </body>
+
+
+
 </html>
