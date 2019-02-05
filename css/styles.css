@@ -7,6 +7,10 @@ body {
   font-size: 24px;
 }
 
+.app-container {
+  flex: 1;
+}
+
 .app-current-count {
   background: #f3f3f3;
   border: 1px solid #d8d8d8;
